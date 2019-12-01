@@ -34,6 +34,16 @@ exports.jwtPassport = passport.use(new JwtStrategy(opts,
                 return done(null, false);
             }
         })
-    }));
+}));
 
-    exports.verifyUser = passport.authenticate('jwt', {session: false});
+exports.verifyUser = passport.authenticate('jwt', {session: false});
+
+exports.verifyAdmin = (req, res, next) => {
+    if(req.user && req.user.admin){
+        next();
+    }else{
+        var err = new Error('You are not authorized to perform this operation!');
+        err.status = 403;
+        return next(err);
+    }
+};
